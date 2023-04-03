@@ -1,24 +1,22 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
+const authentication = (req, res, next) => {
+  console.log(req.session);
+  if (!req.session.tok) return res.send("Retry again");
 
-const authentication = (req,res,next) =>{
-    console.log(req.session)
-    if(!req.session.tok) return res.send('Retry again')
-    
-    const token = req.session.tok;
-    
-    jwt.verify(token,'userbase', (err,decoded)=>{
-        if(err){
-            return res.send('login failed')
-        }
+  const token = req.session.tok;
 
-        console.log(decoded)
-        if(decoded){
+  jwt.verify(token, "userbase", (err, decoded) => {
+    if (err) {
+      return res.send("login failed");
+    }
 
-          req.body.email =  decoded.email;  
-            next()
-        }
-    })
-}
+    console.log(decoded);
+    if (decoded) {
+      req.body.email = decoded.email;
+      next();
+    }
+  });
+};
 
 module.exports = authentication;
